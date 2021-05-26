@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Mukta:700');
+
+html, body {
+  height: 100%;
+  margin: 0px;
+  font-family: 'Mukta', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.main {
+  height: 100%;
+}
+
+.row {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+.layout {
+  padding: 0 !important;
+  margin: 0 !important;
+}

@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import './DateTimeParser.scss';
 import axios from 'axios';
+import Result from '../Result/Result';
+import SubmitButton from "../SubmitButton/SubmitButton";
 
-const api = axios.create({
-    baseURL: 'https://drd28iqq24.execute-api.us-east-2.amazonaws.com/prod'
-});
 
 class DateTimeParser extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {dateString: '', parsedDate: ''};
+        this.state = {dateString: 'now-1d-1h', parsedDate: ''};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,13 +20,15 @@ class DateTimeParser extends Component {
     }
 
     handleSubmit(event) {
-        alert('A dateString was submitted: ' + this.state.dateString);
         event.preventDefault();
-        api.post('/').then(res => {
-            // TODO pass prop to component?? Button as component Result as component
-            console.log(res.data);
+
+        axios.post('https://drd28iqq24.execute-api.us-east-2.amazonaws.com/prod',
+            "\"" + this.state.dateString+ "\"",
+            { headers: {"Content-Type": "text/plain"}})
+            .then(res => {
             this.setState({parsedDate: res.data})
-        })
+        }).catch((e) => console.log(e)); // TODO: Show error message in
+
     }
 
     render() {
@@ -37,15 +38,10 @@ class DateTimeParser extends Component {
                 <div className="form-group">
                     <input type="text" className="date-string-input" placeholder="Enter Date String" value={this.state.dateString} onChange={this.handleChange}/>
                 </div>
-                <button type="submit" className="submit">
-                    <span className="circle" aria-hidden="true">
-                        <span className="icon arrow"/>
-                    </span>
-                    <span className="button-text">Submit</span>
-                </button>
+                <SubmitButton color="white"/>
             </form>
 
-            <h2>{this.state.parsedDate}</h2>
+            <Result value={this.state.parsedDate}/>
         </div>
         );
 

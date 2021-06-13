@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './DateTimeStringifier.scss';
 import axios from 'axios';
+import moment from 'moment';
 import DateTimePicker from 'react-datetime-picker';
 import Result from '../Result/Result';
 import SubmitButton from "../SubmitButton/SubmitButton";
@@ -9,25 +10,33 @@ class DateTimeStringifier extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {date: new Date(), stringifiedDate: ''};
+        this.state = {date: new Date(), result: ''};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(value) {
-        this.setState({date: value, stringifiedDate: ''});
+        this.setState({date: value, result: ''});
     }
 
     handleSubmit(event) {
         event.preventDefault();
+        const now = new moment().format('YYYY-MM-DDTHH:mm:ss') ;
 
         axios.post('https://gvx7fkwcxf.execute-api.us-east-2.amazonaws.com/prod',
-            "\"" + this.state.date.toISOString().slice(0, -1)+ "\"",
-            { headers: {"Content-Type": "text/plain"}})
-            .then(res => {
-                this.setState({stringifiedDate: res.data})
-            }).catch((e) => console.log(e)); // TODO: Show error message in
+            {
+               input: new moment(this.state.date).format('YYYY-MM-DDTHH:mm:ss'),
+               now: now
+            })
+            .then(response => {
+                if(response.data.errorMessage) {
+                    alert(response.data.errorMessage);
+                } else {
+                    this.setState({result: `${response.data} (now==${now})`})
+                }
+
+            }).catch();
 
     }
 
@@ -41,7 +50,7 @@ class DateTimeStringifier extends Component {
                 <SubmitButton color="black"/>
             </form>
 
-            <Result value={this.state.stringifiedDate}/>
+            <Result value={this.state.result}/>
 
         </div>
         );

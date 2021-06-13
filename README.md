@@ -2,7 +2,7 @@
 
 This is the front code of the Date Time API in https://ancient-scrubland-17264.herokuapp.com
 
-![alt tag](preview.png)
+![alt tag](app-preview.png)
 
 This API is used to construct dates using a shorthand syntax that looks like 'now-1d/d', this syntax is used in Elastic Search range queries.
 
